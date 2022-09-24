@@ -1,5 +1,5 @@
 #Person detection based on code from https://thedatafrog.com/en/articles/human-detection-video/
-
+#people tracking + counting https://pyimagesearch.com/2018/08/13/opencv-people-counter/
 
 import pafy
 import numpy as np
@@ -17,7 +17,14 @@ cv2.startWindowThread()
 # start video stream
 # cap = cv2.VideoCapture('PathTest.mp4')
 
-url = "https://www.youtube.com/watch?v=vvOjJoSEFM0"
+
+
+#huntington
+url = "https://www.youtube.com/watch?v=xXV3sz92k8w"
+#venice
+# url = "https://www.youtube.com/watch?v=vvOjJoSEFM0"
+
+
 video = pafy.new(url)
 best = video.getbest(preftype="mp4")
 cap = cv2.VideoCapture(best.url)
@@ -42,7 +49,7 @@ while(cap.isOpened()):
   # Capture frame-by-frame
   
   ret, frame = cap.read()
-  if ret == True and framecounter == 10:
+  if ret == True and framecounter == 5:
 
 
     framecounter = 0
@@ -50,14 +57,14 @@ while(cap.isOpened()):
     
 
     #zoom in on image(actually just cropping)
-    #frame = frame[200:1200, 100:600]
+    frame = frame[100:2000, 900:3000]
 
    
     # resizing for faster but less accurate
-    frame = cv2.resize(frame, (640, 480))
+    #frame = cv2.resize(frame, (640, 480))
 
     # using a greyscale picture, also for faster detection
-    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    #frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
     # detect people in the image
     # returns the bounding boxes for the detected objects
@@ -67,7 +74,7 @@ while(cap.isOpened()):
 
     for (xA, yA, xB, yB) in boxes:
     # display the detected boxes in the colour picture
-        cv2.rectangle(frame, (xA, yA), (xB, yB),(0, 255, 0), 2)
+        cv2.rectangle(frame, (xA, yA), (xB, yB),(0, 255, 0), 1)
     
     
 
