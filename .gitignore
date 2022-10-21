@@ -2273,3 +2273,4 @@ venv/Lib/site-packages/scipy-1.9.1.dist-info/REQUESTED
 venv/Lib/site-packages/scipy-1.9.1.dist-info/top_level.txt
 venv/Lib/site-packages/scipy-1.9.1.dist-info/WHEEL
 venv/Scripts/range-detector
+__pycache__/objecttracker.cpython-39.pyc
