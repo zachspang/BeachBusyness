@@ -1,4 +1,6 @@
-__pycache__/centroidtracker.cpython-39.pyc
-__pycache__/trackableobject.cpython-39.pyc
-output/output_02.avi
+__pycache__/
 venv/
+looptest.py
+oldmain.py
+
+
