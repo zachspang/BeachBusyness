@@ -194,7 +194,7 @@ class ThreadClass(QThread):
                 #turn recent max of people on screen at once into a useable percent
                 recentMax = liveCountData[-1]
 
-                busynessPercent = recentMax * 4
+                busynessPercent = recentMax * 6
                 if busynessPercent > 100:
                     busynessPercent = 100
                 if busynessPercent == 0:
