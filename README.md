@@ -1,10 +1,10 @@
 # BeachBusyness
 
-This project uses OpenCV to count and track the number of people on screen from video livestream of the Huntington Beach pier. The count of people is used to update a GUI which displays how busy the pier is.
+This project uses OpenCV to count and track the number of people on screen from video livestream of the Huntington Beach pier. The count of people is used to update a PyQt5 GUI which displays how busy the pier is.
 
 ## Project in Action
 
-Using OpenCV the program detects moving people, then tracks them untill they eventually leave the screen.
+Using OpenCV the program detects moving people, then tracks them untill they eventually leave the screen. Every 600 frames the max amount of people seen at once is stored and used to update the GUI.
 By default this screen isn't displayed to the user.
 
 <img src="Images/id.jpg" width="300">
@@ -19,7 +19,7 @@ This GUI is displayed and updates about every 10 seconds
 * pip install requirements.txt
 * Run main.py and wait a few seconds for program to start up
 
-* I believe the GUI might not work on Mac but that is untested
+* I believe the GUI will not work on Mac but that is untested
 
 
 ## Technologies
