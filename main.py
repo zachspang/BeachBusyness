@@ -37,13 +37,49 @@ class ThreadClass(QThread):
         #while loop + objectracker class adapted from tutorial https://pyimagesearch.com/2018/08/13/opencv-people-counter/
 
         from objecttracker import ObjectTracker
-        import pafy
         import numpy as np
         import cv2
         from imutils.video import FPS
         import imutils
         import dlib
 
+        import pafy
+        from pafy import backend_youtube_dl, g
+        import youtube_dl
+        import time
+
+        #redefines _fetch_basic to a version that doesnt check dislike count. Since dislikecounts aren't public
+        #anymore the current pafy version returns a key error when setting the video url
+        def _fetch_basic(self):
+            """ Fetch basic data and streams. """
+            if self._have_basic:
+                return
+
+            with youtube_dl.YoutubeDL(self._ydl_opts) as ydl:
+                try:
+                    self._ydl_info = ydl.extract_info(self.videoid, download=False)
+                # Turn into an IOError since that is what pafy previously raised
+                except youtube_dl.utils.DownloadError as e:
+                    raise IOError(str(e).replace('YouTube said', 'Youtube says'))
+
+            if self.callback:
+                self.callback("Fetched video info")
+
+            self._title = self._ydl_info['title']
+            self._author = self._ydl_info['uploader']
+            self._rating = self._ydl_info['average_rating']
+            self._length = self._ydl_info['duration']
+            self._viewcount = self._ydl_info['view_count']
+            self._username = self._ydl_info['uploader_id']
+            self._category = self._ydl_info['categories'][0] if self._ydl_info['categories'] else ''
+            self._bestthumb = self._ydl_info['thumbnails'][0]['url']
+            self._bigthumb = g.urls['bigthumb'] % self.videoid
+            self._bigthumbhd = g.urls['bigthumbhd'] % self.videoid
+            self.expiry = time.time() + g.lifespan
+
+            self._have_basic = True
+
+        backend_youtube_dl.YtdlPafy._fetch_basic = _fetch_basic
 
 
 
@@ -62,7 +98,14 @@ class ThreadClass(QThread):
         #venice
         # url = "https://www.youtube.com/watch?v=vvOjJoSEFM0"
         print("[INFO] starting video stream...")
-        video = pafy.new(url)
+        
+        
+       
+        video = pafy.new(url, basic=False)
+      
+        
+        
+
         best = video.getbest(preftype="mp4")
         vs = cv2.VideoCapture(best.url)
 
@@ -186,7 +229,7 @@ class ThreadClass(QThread):
                 if (totalCount - ot.numDisappeared) > maxCount:
                     maxCount = totalCount - ot.numDisappeared
                 #Every n/60 min assuming 60 fps
-                if (totalFrames % 360 == 0):
+                if (totalFrames % 600 == 0):
                     liveCountData.append(maxCount)
                     maxCount = 0
                 
@@ -198,7 +241,7 @@ class ThreadClass(QThread):
                 if busynessPercent > 100:
                     busynessPercent = 100
                 if busynessPercent == 0:
-                    busynessPercent = 50
+                    busynessPercent = 1
 
                 #update gui
                 self.trigger.emit(busynessPercent)
@@ -211,7 +254,7 @@ class ThreadClass(QThread):
                     cv2.putText(frame, text, (10, H - ((i * 20) + 20)),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
                 # uncomment to show the output frame
-                #cv2.imshow("Frame", frame)
+                cv2.imshow("Frame", frame)
                 
                 key = cv2.waitKey(1) & 0xFF
                 # if the `q` key was pressed, break from the loop
